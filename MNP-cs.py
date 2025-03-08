@@ -31,12 +31,12 @@ f_peak = 3.2      # unit eV, for dft_fields
 
 # 通量监视器设置
 box_regions = [
-    mp.FluxRegion(center=mp.Vector3(x=-r), size=mp.Vector3(0, by, bz)),
-    mp.FluxRegion(center=mp.Vector3(x=+r), size=mp.Vector3(0, by, bz)),
-    mp.FluxRegion(center=mp.Vector3(y=-r), size=mp.Vector3(bx, 0, bz)),
-    mp.FluxRegion(center=mp.Vector3(y=+r), size=mp.Vector3(bx, 0, bz)),
-    mp.FluxRegion(center=mp.Vector3(z=-r), size=mp.Vector3(bx, by, 0)),
-    mp.FluxRegion(center=mp.Vector3(z=+r), size=mp.Vector3(bx, by, 0)),
+    mp.FluxRegion(center=mp.Vector3(x=-bx/2), size=mp.Vector3(0, by, bz)),
+    mp.FluxRegion(center=mp.Vector3(x=+bx/2), size=mp.Vector3(0, by, bz)),
+    mp.FluxRegion(center=mp.Vector3(y=-by/2), size=mp.Vector3(bx, 0, bz)),
+    mp.FluxRegion(center=mp.Vector3(y=+by/2), size=mp.Vector3(bx, 0, bz)),
+    mp.FluxRegion(center=mp.Vector3(z=-bz/2), size=mp.Vector3(bx, by, 0)),
+    mp.FluxRegion(center=mp.Vector3(z=+bz/2), size=mp.Vector3(bx, by, 0)),
 ]
 
 # 空模拟（无银球）
