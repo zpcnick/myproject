@@ -107,7 +107,7 @@ ez_enhancement = ez_intensity / ez_intensity_source
 # 保存数据
 np.savetxt('spectra.dat', np.column_stack((freqs*1.24, sigma_abs, sigma_scat)),
            header='freqs(eV)\tAbsorption\tScattering')
-np.savetxt('ez2.dat', ez_enhancement)
+np.savetxt('ez.dat', ez_enhancement)
 
 # 绘制光谱
 if mp.am_master():
@@ -128,6 +128,6 @@ if mp.am_master():
     plt.xlabel("x (points)")
     plt.ylabel("z (points)")
     plt.title(f"Electric Field Enhancement Distribution @ {f_peaks[0]} eV")
-    plt.savefig("ez2.png")
+    plt.savefig("ez.png")
     plt.close()
 
