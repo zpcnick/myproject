@@ -27,7 +27,7 @@ pml_layers = [mp.PML(dpml)]
 bx = 2*r
 by = 2*r
 bz = 2*r
-f_peak = 3.2      # unit eV, for dft_fields
+f_peaks = [3.2, ]      # unit eV, for dft_fields
 
 # 通量监视器设置
 box_regions = [
@@ -50,7 +50,7 @@ sim_empty = mp.Simulation(
 ### settings for sim_empty.add, flux and dft
 objs_empty = [sim_empty.add_flux(frq_cen, dfrq, nfrq, region) for region in box_regions]
 xz0plane_pml = mp.Volume(center=mp.Vector3(), size=mp.Vector3(s - 2 * dpml, 0, s - 2 * dpml))
-dft_source = sim_empty.add_dft_fields([mp.Ez], f_peak/1.24, dfrq, nfrq, where=xz0plane_pml)
+dft_source = sim_empty.add_dft_fields([mp.Ez], np.array(f_peaks)/1.24, where=xz0plane_pml)
 
 sim_empty.run(until_after_sources=10)
 
@@ -60,7 +60,7 @@ freqs = np.array(mp.get_flux_freqs(objs_empty[0]))
 inc = np.array(mp.get_fluxes(objs_empty[0])) / (by*bz)
 
 ez_data_source = sim_empty.get_dft_array(dft_source, mp.Ez, 0)
-ez_intensity_source = np.square(np.abs(ez_data_source))
+ez_intensity_source = np.abs(ez_data_source)
 
 # 含银球模拟
 sim = mp.Simulation(
@@ -76,7 +76,7 @@ objs_abs = [sim.add_flux(frq_cen, dfrq, nfrq, region) for region in box_regions]
 objs_scat = [sim.add_flux(frq_cen, dfrq, nfrq, region) for region in box_regions]
 for obj, data in zip(objs_scat, data_empty):
     sim.load_minus_flux_data(obj, data)
-dft_fields = sim.add_dft_fields([mp.Ez], f_peak/1.24, dfrq, nfrq, where=xz0plane_pml)
+dft_fields = sim.add_dft_fields([mp.Ez], np.array(f_peaks)/1.24, where=xz0plane_pml)
 
 sim.run(until_after_sources=30)
 
@@ -101,7 +101,7 @@ sigma_ext = sigma_abs + sigma_scat
 
 # 获取并保存电场分布
 ez_data = sim.get_dft_array(dft_fields, mp.Ez, 0)
-ez_intensity = np.square(np.abs(ez_data))
+ez_intensity = np.abs(ez_data)
 ez_enhancement = ez_intensity / ez_intensity_source
 
 # 保存数据
@@ -127,7 +127,7 @@ if mp.am_master():
     plt.colorbar(label="Electric Field Enhancement")
     plt.xlabel("x (points)")
     plt.ylabel("z (points)")
-    plt.title("Electric Field Enhancement Distribution")
+    plt.title(f"Electric Field Enhancement Distribution @ {f_peaks[0]} eV")
     plt.savefig("ez2.png")
     plt.close()
 
